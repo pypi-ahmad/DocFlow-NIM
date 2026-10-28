@@ -19,6 +19,21 @@ Results are stored in `conversion_results/<hash>/document.json`, alongside page 
 
 ## Checks
 
+### UI previews
+
+The Space layout lives in `gradio_ui.py`, separate from the GPU model initialization in `app.py`. The local app uses Streamlit's native components and the light/dark theme in `.streamlit/config.toml`.
+
+Preview the actual Gradio layout without loading the model:
+
+```powershell
+uv run --with gradio==6.31.0 python scripts/preview_ui.py
+uv run --with gradio==6.31.0 python scripts/preview_ui.py --stress
+```
+
+The first command serves a UI-only preview at `http://127.0.0.1:7860`; parsing is disconnected. The second serves the real upload panel with synthetic files at `http://127.0.0.1:7861`, covering empty, single-file, five-file, long-filename and multilingual cases in narrow and wide containers. These are local development tools, not inference backends. See [UI verification](ui-verification.md) for checks and limits.
+
+### Backend checks
+
 Run from the project root:
 
 ```powershell

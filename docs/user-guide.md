@@ -19,7 +19,7 @@ uv run python -c "from huggingface_hub import snapshot_download; snapshot_downlo
 Start Docker Desktop, then build the local worker image:
 
 ```powershell
-docker build -t docflow-nim-local:dev runtime
+docker build -f runtime/Dockerfile -t docflow-nim-local:dev .
 ```
 
 Run `.\launch.cmd` or double-click `launch.cmd`. It starts Docker Desktop if needed, starts the worker, waits for the model, and launches the app at [http://127.0.0.1:8472](http://127.0.0.1:8472). The model and worker are currently required even for online mode.
@@ -54,3 +54,5 @@ If the key was configured outside the current terminal, reopen the terminal befo
 - **Port already in use:** close the conflicting app or select a free port when starting Streamlit manually. Do not stop unrelated processes.
 
 See the [developer guide](developer-guide.md) for implementation details and diagnostics.
+
+Image inputs have a 40-megapixel limit per frame, checked before RGB conversion. Rebuild the local worker after updating its code, using the root-context Docker command above.
