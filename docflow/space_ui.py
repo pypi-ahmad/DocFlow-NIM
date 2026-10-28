@@ -61,10 +61,10 @@ def view(state, selection):
     """Return the selected document's previews and downloadable artifacts."""
     result, directory = state["results"][int(selection)]
     directory = Path(directory)
-    previews = sorted(str(p) for p in directory.glob("page-*.png"))
+    previews = [str(directory / f"page-{page['number']}.png") for page in result["pages"]]
     annotations = sorted(str(p) for p in directory.glob("annotated-*.png"))
     files = [str(directory / name) for name in
              ("document.md", "document.html", "document.json", "chunks.json")]
-    return ("Complete" if result["complete"] else "Partial conversion: inspect failed or truncated pages.",
+    return ("Complete" if result["complete"] else "Some pages are incomplete. Inspect Layout and JSON for errors, then retry those pages.",
             previews, (directory / "document.md").read_text(encoding="utf-8"),
             annotations, json.loads((directory / "document.json").read_text(encoding="utf-8")), files)
