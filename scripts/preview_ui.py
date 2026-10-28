@@ -17,7 +17,7 @@ from docflow.space_ui import prepare
 from gradio_ui import CSS, THEME, build_demo, upload_panel
 
 
-def preview_only(state):
+def preview_only(state, backend="Space GPU", api_key=""):
     """Keep the preview from silently invoking any inference service."""
     raise gr.Error(
         "UI preview only. Open the Hugging Face app or launch.cmd to parse documents."

@@ -29,16 +29,19 @@ class PageResult:
 
 
 def parse_page(
-    image: Image.Image, mode: Literal["offline", "online"], *, client=None
+    image: Image.Image,
+    mode: Literal["offline", "online"],
+    *,
+    client=None,
+    api_key: str | None = None,
 ) -> PageResult:
     """Parse one RGB page, never falling back to another backend."""
     if mode not in ("offline", "online"):
         raise ValueError("Choose offline or online mode.")
     headers = {"Accept": "application/json"}
     if mode == "online":
-        key = os.environ.get("NVIDIA_API_KEY", "").strip()
-        if not key:
-            raise ParseError("NVIDIA_API_KEY is missing from the process environment.")
+        key = os.environ.get("NVIDIA_API_KEY", "") if api_key is None else api_key
+        validate_api_key(key)
         headers["Authorization"] = f"Bearer {key}"
         url = HOSTED_URL
     else:
@@ -53,12 +56,24 @@ def parse_page(
             files={"document": ("page.png", encoded.getvalue(), "image/png")},
             timeout=180,
         )
+    except httpx.TimeoutException:
+        raise ParseError("The model timed out. Try fewer pages and retry.") from None
     except httpx.RequestError:
         raise ParseError(
             f"Cannot reach the {mode} model. Check its availability."
         ) from None
     if not response.is_success:
-        raise ParseError(f"The {mode} model returned HTTP {response.status_code}.")
+        messages = {
+            401: "NVIDIA rejected the API key. Check or replace it.",
+            403: "This key cannot access the model. Check your NVIDIA account permissions.",
+            429: "NVIDIA rate or quota limit reached. Check your quota and retry later.",
+        }
+        raise ParseError(
+            messages.get(
+                response.status_code,
+                f"The {mode} model returned HTTP {response.status_code}. Retry later.",
+            )
+        )
     try:
         payload = response.json()
         content = payload["content"]
@@ -73,3 +88,15 @@ def parse_page(
     except (ValueError, KeyError, TypeError):
         raise ParseError("The model returned an invalid page response.") from None
     return PageResult(content, reason, usage, mode)
+
+
+def validate_api_key(key):
+    """Reject unusable credentials without including their value in errors."""
+    if not isinstance(key, str) or not key.strip():
+        raise ParseError("NVIDIA API key is missing. Enter your key to continue.")
+    if not key.isascii() or any(
+        char.isspace() or ord(char) < 33 or ord(char) == 127 for char in key
+    ):
+        raise ParseError(
+            "Paste a valid NVIDIA API key without whitespace or control characters."
+        )

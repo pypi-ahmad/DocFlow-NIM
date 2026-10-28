@@ -56,3 +56,11 @@ If the key was configured outside the current terminal, reopen the terminal befo
 See the [developer guide](developer-guide.md) for implementation details and diagnostics.
 
 Image inputs have a 40-megapixel limit per frame, checked before RGB conversion. Rebuild the local worker after updating its code, using the root-context Docker command above.
+
+## Use your NVIDIA API key in the Space
+
+Select **My NVIDIA API key**, enter your key in the masked field, then parse your documents. Only Nemotron-3.5-Parse is supported. Requests pass through the Space to NVIDIA and use your NVIDIA quota without allocating ZeroGPU. Existing file and page limits apply.
+
+The key stays in the current page session for repeated conversions. Clear key, confirmed Clear documents and results, or a page refresh removes it. The app does not write it to disk, exports, logs, cookies or browser local storage. Switching processing modes hides the field but retains its value. NVIDIA authentication or quota failures never trigger automatic fallback to Space GPU.
+
+The local Streamlit app continues to read its server-side NVIDIA_API_KEY environment variable.

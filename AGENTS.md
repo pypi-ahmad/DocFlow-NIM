@@ -47,3 +47,5 @@ Use short, imperative commit subjects describing one change. Pull requests shoul
 ## Security and configuration
 
 Keep credentials out of source files, examples, and logs. Use configured environment variables for secrets. Preserve unrelated local files and request explicit authorization before destructive filesystem or Git operations.
+
+The public Gradio Space also accepts visitor-supplied NVIDIA API keys as request-local credentials. Never put visitor keys in environment variables, shared globals, document state, caches, logs or exports. Space GPU remains the default; both routes use only Nemotron-3.5-Parse.

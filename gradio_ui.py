@@ -139,6 +139,25 @@ def build_demo(preflight, run):
                 elem_id="upload-panel",
                 elem_classes="workspace-panel",
             ):
+                backend = gr.Radio(
+                    ["Space GPU", "My NVIDIA API key"],
+                    value="Space GPU",
+                    label="Processing",
+                )
+                with gr.Group(visible=False) as credentials:
+                    api_key = gr.Textbox(
+                        label="NVIDIA API key", type="password", value=""
+                    )
+                    clear_key = gr.Button("Clear key", size="sm")
+                    gr.Markdown(
+                        "Your key and document pages pass through this Space to NVIDIA and use your NVIDIA quota. The key stays in this page session and is never written to app files or exports. Refresh or select Clear key to remove it. [Get an NVIDIA API key](https://build.nvidia.com/nvidia/nemotron-3.5-parse)."
+                    )
+                backend.change(
+                    lambda mode: gr.Group(visible=mode == "My NVIDIA API key"),
+                    backend,
+                    credentials,
+                )
+                clear_key.click(lambda: "", outputs=api_key, queue=False)
                 uploads, first, last, button, clear = upload_panel()
 
             with gr.Column(
@@ -213,7 +232,7 @@ def build_demo(preflight, run):
             preflight, [uploads, first, last, state], state
         ).success(
             run,
-            state,
+            [state, backend, api_key],
             [state, selection, archive, *outputs],
             concurrency_limit=1,
             concurrency_id="model",
@@ -267,8 +286,8 @@ def build_demo(preflight, run):
         confirm_clear.click(
             reset, state, [state, uploads, selection, archive, *outputs]
         ).then(
-            lambda: (gr.Group(visible=False), gr.Accordion(visible=False)),
-            outputs=[confirmation, exports],
+            lambda: (gr.Group(visible=False), gr.Accordion(visible=False), ""),
+            outputs=[confirmation, exports, api_key],
         )
 
     return demo

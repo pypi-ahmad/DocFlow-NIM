@@ -51,3 +51,11 @@ Documents run on Hugging Face servers. Session results are temporary. Clear remo
 The initial GPU limit is 120 seconds. Quota exhaustion or timeouts may require signing in or submitting fewer pages. Live ZeroGPU checks passed for a synthetic image and a five-page PDF (about 12 and 30 seconds end to end). These small samples do not establish throughput for dense documents.
 
 Image inputs are limited to 40 megapixels per frame before RGB expansion. PDF preflight reads page metadata; conversion renders only selected PDF pages and keeps their original page numbers.
+
+## Use your NVIDIA API key in the Space
+
+Select **My NVIDIA API key**, enter your key in the masked field, then parse your documents. Only Nemotron-3.5-Parse is supported. Requests pass through the Space to NVIDIA and use your NVIDIA quota without allocating ZeroGPU. Existing file and page limits apply.
+
+The key stays in the current page session for repeated conversions. Clear key, confirmed Clear documents and results, or a page refresh removes it. The app does not write it to disk, exports, logs, cookies or browser local storage. Switching processing modes hides the field but retains its value. NVIDIA authentication or quota failures never trigger automatic fallback to Space GPU.
+
+The local Streamlit app continues to read its server-side NVIDIA_API_KEY environment variable.
