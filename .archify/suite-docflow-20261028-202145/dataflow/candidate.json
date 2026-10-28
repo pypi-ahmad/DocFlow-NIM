@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Document data pipeline",
+    "output": ".archify/suite-docflow-20261028-202145/dataflow/dataflow.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/pypi-ahmad/DocFlow-NIM.git",
+      "revision": "27afd9b526ea2c16b632bcd2f0434e47dc5bd9fd"
+    },
+    "viewBox": [
+      1120,
+      400
+    ]
+  },
+  "stages": [
+    {
+      "label": "Input"
+    },
+    {
+      "label": "Render"
+    },
+    {
+      "label": "Inference"
+    },
+    {
+      "label": "Normalize"
+    },
+    {
+      "label": "Output"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "input",
+      "label": "PDF / images",
+      "type": "external",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 44
+        }
+      ],
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "render",
+      "label": "Selected pages",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 44
+        }
+      ],
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "raw",
+      "label": "Model response",
+      "type": "cloud",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 100
+        }
+      ],
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "post",
+      "label": "Postprocessing",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 101
+        }
+      ],
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "out",
+      "label": "Exports",
+      "type": "database",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 137
+        }
+      ],
+      "stage": 4,
+      "row": 0
+    }
+  ],
+  "flows": [
+    {
+      "from": "input",
+      "to": "render",
+      "label": "page range"
+    },
+    {
+      "from": "render",
+      "to": "raw",
+      "label": "RGB image"
+    },
+    {
+      "from": "raw",
+      "to": "post",
+      "label": "text + geometry"
+    },
+    {
+      "from": "post",
+      "to": "out",
+      "label": "MD + JSON + HTML"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Artifacts",
+      "items": [
+        "Source and annotated page PNGs accompany document Markdown, HTML, JSON and chunks.",
+        "Space bundles each document in a separate ZIP directory.",
+        "Raw model output and incomplete-page status remain available for review."
+      ]
+    }
+  ]
+}

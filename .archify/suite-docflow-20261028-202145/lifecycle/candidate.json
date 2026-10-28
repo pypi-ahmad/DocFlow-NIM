@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Space result lifecycle",
+    "output": ".archify/suite-docflow-20261028-202145/lifecycle/lifecycle.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/pypi-ahmad/DocFlow-NIM.git",
+      "revision": "27afd9b526ea2c16b632bcd2f0434e47dc5bd9fd"
+    }
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Session results"
+    },
+    {
+      "id": "recovery",
+      "label": "Page errors"
+    },
+    {
+      "id": "terminal",
+      "label": "Cleanup"
+    }
+  ],
+  "states": [
+    {
+      "id": "empty",
+      "label": "Empty",
+      "type": "start",
+      "sources": [
+        {
+          "path": "gradio_ui.py",
+          "line": 124
+        }
+      ],
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "ready",
+      "label": "Prepared",
+      "type": "waiting",
+      "sources": [
+        {
+          "path": "docflow/space_ui.py",
+          "line": 40
+        }
+      ],
+      "lane": "main",
+      "col": 1
+    },
+    {
+      "id": "running",
+      "label": "Converting",
+      "type": "active",
+      "sources": [
+        {
+          "path": "app.py",
+          "line": 61
+        }
+      ],
+      "lane": "main",
+      "col": 2
+    },
+    {
+      "id": "done",
+      "label": "Complete",
+      "type": "success",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 134
+        }
+      ],
+      "lane": "main",
+      "col": 3
+    },
+    {
+      "id": "partial",
+      "label": "Partial",
+      "type": "failure",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 117
+        }
+      ],
+      "lane": "recovery",
+      "col": 3
+    },
+    {
+      "id": "clear",
+      "label": "Cleared",
+      "type": "neutral",
+      "sources": [
+        {
+          "path": "gradio_ui.py",
+          "line": 1
+        }
+      ],
+      "lane": "terminal",
+      "col": 3
+    }
+  ],
+  "transitions": [
+    {
+      "from": "empty",
+      "to": "ready",
+      "label": "preflight"
+    },
+    {
+      "from": "ready",
+      "to": "running",
+      "label": "submit"
+    },
+    {
+      "from": "running",
+      "to": "done",
+      "label": "all complete"
+    },
+    {
+      "from": "running",
+      "to": "partial",
+      "label": "page failure"
+    },
+    {
+      "from": "partial",
+      "to": "ready",
+      "label": "resubmit"
+    },
+    {
+      "from": "done",
+      "to": "clear",
+      "label": "confirm clear"
+    },
+    {
+      "from": "partial",
+      "to": "clear",
+      "label": "confirm clear"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Session boundaries",
+      "items": [
+        "Prepared means CPU preflight created jobs; it does not validate NVIDIA account access.",
+        "Clear deletes session-owned output directories. Framework file-cache cleanup is separate.",
+        "The masked visitor key remains in the current page until Clear key, confirmed reset or refresh."
+      ]
+    }
+  ]
+}

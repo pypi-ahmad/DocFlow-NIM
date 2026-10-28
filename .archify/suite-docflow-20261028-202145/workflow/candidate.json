@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Space conversion workflow",
+    "output": ".archify/suite-docflow-20261028-202145/workflow/workflow.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/pypi-ahmad/DocFlow-NIM.git",
+      "revision": "27afd9b526ea2c16b632bcd2f0434e47dc5bd9fd"
+    }
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Document conversion"
+    },
+    {
+      "id": "error",
+      "label": "Input recovery"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "upload",
+      "label": "Upload files",
+      "type": "frontend",
+      "sources": [
+        {
+          "path": "gradio_ui.py",
+          "line": 59
+        }
+      ],
+      "lane": "main",
+      "col": 0,
+      "width": 140
+    },
+    {
+      "id": "check",
+      "label": "Validate limits",
+      "type": "security",
+      "sources": [
+        {
+          "path": "docflow/space_ui.py",
+          "line": 20
+        }
+      ],
+      "lane": "main",
+      "col": 1,
+      "width": 140
+    },
+    {
+      "id": "route",
+      "label": "Choose backend",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "app.py",
+          "line": 93
+        }
+      ],
+      "lane": "main",
+      "col": 2,
+      "width": 140
+    },
+    {
+      "id": "parse",
+      "label": "Parse pages",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 97
+        }
+      ],
+      "lane": "main",
+      "col": 3,
+      "width": 140
+    },
+    {
+      "id": "export",
+      "label": "Review + export",
+      "type": "frontend",
+      "sources": [
+        {
+          "path": "gradio_ui.py",
+          "line": 180
+        }
+      ],
+      "lane": "main",
+      "col": 4,
+      "width": 140
+    },
+    {
+      "id": "reject",
+      "label": "Correct input",
+      "type": "security",
+      "sources": [
+        {
+          "path": "app.py",
+          "line": 54
+        }
+      ],
+      "lane": "error",
+      "col": 1,
+      "width": 140
+    }
+  ],
+  "edges": [
+    {
+      "from": "upload",
+      "to": "check"
+    },
+    {
+      "from": "check",
+      "to": "route"
+    },
+    {
+      "from": "route",
+      "to": "parse"
+    },
+    {
+      "from": "parse",
+      "to": "export"
+    },
+    {
+      "from": "check",
+      "to": "reject",
+      "label": "invalid",
+      "role": "error"
+    },
+    {
+      "from": "reject",
+      "to": "upload",
+      "label": "resubmit",
+      "role": "return"
+    }
+  ],
+  "mainPath": [
+    "upload",
+    "check",
+    "route",
+    "parse",
+    "export"
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Routing",
+      "items": [
+        "Space GPU is the default. API mode validates the visitor key before hosted inference.",
+        "Limits: five documents and five selected pages, 50 MiB per file, 40 megapixels per image.",
+        "Page failures produce partial results for inspection; retries are user initiated."
+      ]
+    }
+  ]
+}

@@ -11,3 +11,8 @@ conversion_results/
 .playwright-cli/
 output/
 docs/security-audit/
+
+# Generated diagram review receipts
+.archify/**/*.browser-check.json
+.archify/**/*.delivery.json
+.archify/**/*.finalize*.json

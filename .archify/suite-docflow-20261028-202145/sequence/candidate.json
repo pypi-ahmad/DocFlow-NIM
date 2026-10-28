@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Visitor API request sequence",
+    "output": ".archify/suite-docflow-20261028-202145/sequence/sequence.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/pypi-ahmad/DocFlow-NIM.git",
+      "revision": "27afd9b526ea2c16b632bcd2f0434e47dc5bd9fd"
+    },
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "browser",
+      "label": "Visitor",
+      "type": "external",
+      "sources": [
+        {
+          "path": "gradio_ui.py",
+          "line": 124
+        }
+      ]
+    },
+    {
+      "id": "space",
+      "label": "Space",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "app.py",
+          "line": 93
+        }
+      ]
+    },
+    {
+      "id": "nvidia",
+      "label": "NVIDIA API",
+      "type": "cloud",
+      "sources": [
+        {
+          "path": "docflow/backends.py",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "id": "files",
+      "label": "Artifacts",
+      "type": "database",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 137
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": "m0",
+      "from": "browser",
+      "to": "space",
+      "label": "Upload + page range",
+      "variant": "default",
+      "y": 170
+    },
+    {
+      "id": "m1",
+      "from": "space",
+      "to": "browser",
+      "label": "Validated session jobs",
+      "variant": "return",
+      "y": 225
+    },
+    {
+      "id": "m2",
+      "from": "browser",
+      "to": "space",
+      "label": "API mode + visitor key",
+      "variant": "security",
+      "y": 280
+    },
+    {
+      "id": "m3",
+      "from": "space",
+      "to": "nvidia",
+      "label": "POST page PNG + Bearer key",
+      "variant": "security",
+      "y": 335
+    },
+    {
+      "id": "m4",
+      "from": "nvidia",
+      "to": "space",
+      "label": "Content + finish reason",
+      "variant": "return",
+      "y": 390
+    },
+    {
+      "id": "m5",
+      "from": "space",
+      "to": "files",
+      "label": "Write previews + exports",
+      "variant": "default",
+      "y": 445
+    },
+    {
+      "id": "m6",
+      "from": "space",
+      "to": "browser",
+      "label": "Review + download links",
+      "variant": "return",
+      "y": 500
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Request-local key",
+      "items": [
+        "The visitor key is used for the NVIDIA Authorization header.",
+        "Keys are not placed in result metadata or export files.",
+        "Non-success responses are sanitized; there is no GPU fallback."
+      ]
+    }
+  ]
+}

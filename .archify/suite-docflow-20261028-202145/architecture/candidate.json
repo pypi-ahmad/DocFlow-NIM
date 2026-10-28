@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "DocFlow NIM architecture",
+    "output": ".archify/suite-docflow-20261028-202145/architecture/architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/pypi-ahmad/DocFlow-NIM.git",
+      "revision": "27afd9b526ea2c16b632bcd2f0434e47dc5bd9fd"
+    }
+  },
+  "components": [
+    {
+      "id": "local",
+      "label": "Streamlit",
+      "type": "frontend",
+      "sources": [
+        {
+          "path": "streamlit_app.py",
+          "line": 19
+        }
+      ],
+      "pos": [
+        30,
+        40
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "space",
+      "label": "Gradio Space",
+      "type": "frontend",
+      "sources": [
+        {
+          "path": "gradio_ui.py",
+          "line": 124
+        }
+      ],
+      "pos": [
+        30,
+        260
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "convert",
+      "label": "Conversion",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 74
+        }
+      ],
+      "pos": [
+        370,
+        150
+      ],
+      "size": [
+        180,
+        72
+      ]
+    },
+    {
+      "id": "gpu",
+      "label": "Space GPU",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "app.py",
+          "line": 88
+        }
+      ],
+      "pos": [
+        370,
+        350
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "nim",
+      "label": "Local worker",
+      "type": "backend",
+      "sources": [
+        {
+          "path": "runtime/server.py",
+          "line": 35
+        }
+      ],
+      "pos": [
+        700,
+        40
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "api",
+      "label": "NVIDIA API",
+      "type": "cloud",
+      "sources": [
+        {
+          "path": "docflow/backends.py",
+          "line": 11
+        }
+      ],
+      "pos": [
+        700,
+        260
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "store",
+      "label": "Result files",
+      "type": "database",
+      "sources": [
+        {
+          "path": "docflow/conversion.py",
+          "line": 137
+        }
+      ],
+      "pos": [
+        30,
+        520
+      ],
+      "size": [
+        180,
+        64
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "local",
+      "to": "convert",
+      "label": "convert"
+    },
+    {
+      "from": "space",
+      "to": "convert",
+      "label": "validated jobs"
+    },
+    {
+      "from": "convert",
+      "to": "nim",
+      "label": "offline only"
+    },
+    {
+      "from": "convert",
+      "to": "api",
+      "label": "online + key"
+    },
+    {
+      "from": "convert",
+      "to": "gpu",
+      "label": "Space GPU only"
+    },
+    {
+      "from": "convert",
+      "to": "store",
+      "label": "write exports"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Credentials and isolation",
+      "items": [
+        "Streamlit reads NVIDIA_API_KEY; Space visitors supply request-local keys.",
+        "API mode never allocates ZeroGPU. No automatic backend fallback.",
+        "Space outputs live in session-owned temporary directories; local outputs persist on disk."
+      ]
+    }
+  ]
+}
