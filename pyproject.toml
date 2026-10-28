@@ -1,0 +1,26 @@
+[project]
+name = "docflow-nim"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "bleach>=6.4.0",
+    "ebooklib>=0.20",
+    "httpx>=0.28.1",
+    "huggingface-hub>=2.3.0",
+    "mammoth>=1.13.0",
+    "markdown2>=2.5.5",
+    "openpyxl>=3.1.5",
+    "pillow>=13.0.0",
+    "pypdfium2>=5.14.0",
+    "python-pptx>=1.0.2",
+    "streamlit>=1.66.1",
+    "weasyprint>=70.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+    "ty>=0.0.93",
+]
