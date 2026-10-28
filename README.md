@@ -64,4 +64,4 @@ The local Streamlit app continues to read its server-side NVIDIA_API_KEY environ
 
 ![DocFlow NIM architecture: Streamlit and Gradio route document conversion to the local worker, Space GPU, or NVIDIA API and produce result files.](docs/images/architecture.png)
 
-Created with Archify. [Download the interactive diagram](.archify/suite-docflow-20261028-202145/architecture/architecture.html) and open it in your browser to explore source links.
+Created with Diagram Design using its default editorial palette. [Download the HTML diagram](docs/diagrams/architecture.html) and open it in your browser.
