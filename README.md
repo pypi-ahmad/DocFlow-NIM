@@ -60,12 +60,8 @@ The key stays in the current page session for repeated conversions. Clear key, c
 
 The local Streamlit app continues to read its server-side NVIDIA_API_KEY environment variable.
 
-## Diagrams
+## Architecture
 
-Download a diagram HTML file and open it in your browser to explore it. Each diagram includes source links pinned to the application revision it describes. The JSON source is stored beside each HTML file.
+![DocFlow NIM architecture: Streamlit and Gradio route document conversion to the local worker, Space GPU, or NVIDIA API and produce result files.](docs/images/architecture.png)
 
-- [Architecture](.archify/suite-docflow-20261028-202145/architecture/architecture.html)
-- [Workflow](.archify/suite-docflow-20261028-202145/workflow/workflow.html)
-- [Sequence](.archify/suite-docflow-20261028-202145/sequence/sequence.html)
-- [Dataflow](.archify/suite-docflow-20261028-202145/dataflow/dataflow.html)
-- [Lifecycle](.archify/suite-docflow-20261028-202145/lifecycle/lifecycle.html)
+Created with Archify. [Download the interactive diagram](.archify/suite-docflow-20261028-202145/architecture/architecture.html) and open it in your browser to explore source links.
