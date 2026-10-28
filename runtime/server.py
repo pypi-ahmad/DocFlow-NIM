@@ -8,6 +8,8 @@ from fastapi import FastAPI, HTTPException, UploadFile
 from PIL import Image
 from transformers import AutoModel, AutoProcessor, GenerationConfig
 
+from docflow.image_limits import check_image_size
+
 app = FastAPI()
 lock = threading.Lock()
 model = (
@@ -36,6 +38,7 @@ def parse(document: UploadFile):
         raise HTTPException(413, "Image too large")
     try:
         with Image.open(io.BytesIO(data)) as source:
+            check_image_size(source.size)
             image = source.convert("RGB")
     except Exception:
         raise HTTPException(422, "Invalid image") from None

@@ -1,0 +1,8 @@
+# Only worker source and its shared image guard enter the build context.
+**
+!runtime/
+!runtime/Dockerfile
+!runtime/server.py
+!runtime/probe_local.py
+!docflow/
+!docflow/image_limits.py

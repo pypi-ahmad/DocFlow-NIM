@@ -8,3 +8,6 @@ conversion_results/
 .env.*
 .codegraph/
 .code-review-graph/
+.playwright-cli/
+output/
+docs/security-audit/
